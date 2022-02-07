@@ -1,0 +1,54 @@
+version: "3.8"
+services:
+  postgres_db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: actix
+      POSTGRES_USER: actix
+      POSTGRES_DB: actix
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d:delegated
+  backend:
+    build:
+      context: ./rust/backend
+      dockerfile: Dockerfile
+    container_name: rust-app
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./rust/backend:/usr/src/app:delegated
+    command: /bin/sh -c "cargo watch -x run"
+    tty: true
+    environment:
+      USER: root
+      CARGO_BUILD_TARGET_DIR: /app/target
+      PG.USER: actix
+      PG.PASSWORD: actix
+      DATABASE_URL: postgres://actix:actix@postgres_db/actix
+    depends_on:
+      - postgres_db
+
+  pgadmin4:
+    image: dpage/pgadmin4:5.0
+    container_name: pgadmin4
+    ports:
+      - 8000:80
+    volumes:
+      - pgadmin4_volume:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root
+      PGADMIN_DEFAULT_PASSWORD: root
+    hostname: pgadmin4
+    depends_on:
+      - postgres_db
+    restart: always
+
+volumes:
+  postgres_db_volume:
+    external: true
+  pgadmin4_volume:
+    external: true
