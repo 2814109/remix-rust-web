@@ -9,4 +9,5 @@ WORKDIR /usr/src/app
 COPY ./Cargo.toml /usr/src/app/
 COPY ./Cargo.lock /usr/src/app/
 #ENV CARGO_BUILD_TARGET_DIR=/app/target
+EXPOSE 9000
 CMD bash -c "cargo run --release"

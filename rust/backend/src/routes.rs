@@ -1,3 +1,5 @@
+mod handlers;
+
 use actix_web::{get, post, web, HttpResponse,Responder};
 
 #[get("/test")]
@@ -28,4 +30,8 @@ pub fn init_router(config: &mut web::ServiceConfig) {
     config.service(hello_test_section);
     config.service(hello_test);
     config.service(echo);
+    // config.route("/users", web::get().to(handlers::get_users))
+    // config.route("/users/{id}", web::get().to(handlers::get_user_by_id))
+    // config.route("/users", web::post().to(handlers::add_user))
+    // config.route("/users/{id}", web::delete().to(handlers::delete_user))
 } 

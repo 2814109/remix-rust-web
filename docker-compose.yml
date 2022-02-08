@@ -18,7 +18,7 @@ services:
     container_name: rust-app
     restart: always
     ports:
-      - "9000:9000"
+      - "127.0.0.1:9000:9000"
     volumes:
       - ./rust/backend:/usr/src/app:delegated
     command: /bin/sh -c "cargo watch -x run"
