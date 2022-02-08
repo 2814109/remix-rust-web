@@ -1,8 +1,8 @@
 use actix_web::{App, HttpServer};
-mod router;
+mod routes;
 mod postgres;
 
-use crate::router::*;
+use crate::routes::*;
 use crate::postgres::*;
 
 #[actix_web::main]
