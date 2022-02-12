@@ -4,13 +4,22 @@ use super::Pool;
 use crate::diesel::QueryDsl;
 use crate::diesel::RunQueryDsl;
 use actix_web::{web, Error, HttpResponse};
-use diesel::dsl::{delete, insert_into};
+use diesel::dsl::{delete, insert_into, update};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
 
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputUser {
+    pub first_name: String,
+    pub last_name: String,
+    pub email: String,
+}
+
+// update User
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateUser {
+    pub id: i32,
     pub first_name: String,
     pub last_name: String,
     pub email: String,
@@ -55,6 +64,17 @@ pub async fn add_user(
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
+// Handler for Put /users/{id}
+pub async fn update_user(
+    db: web::Data<Pool>,
+    item: web::Json<UpdateUser>,
+) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || update_single_user(db, item))
+        .await
+        .map(|user| HttpResponse::Created().json(user))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
 // Handler for DELETE /users/{id}
 pub async fn delete_user(
     db: web::Data<Pool>,
@@ -92,4 +112,19 @@ fn delete_single_user(db: web::Data<Pool>, user_id: i32) -> Result<usize, diesel
     let conn = db.get().unwrap();
     let count = delete(users.find(user_id)).execute(&conn)?;
     Ok(count)
+}
+
+fn update_single_user(    
+    db: web::Data<Pool>,
+    item: web::Json<UpdateUser>,
+) -> Result<User, diesel::result::Error>{
+    let conn = db.get().unwrap();
+    let update_user = NewUser {
+    first_name: &item.first_name,
+    last_name: &item.last_name,
+    email: &item.email,
+    created_at: chrono::Local::now().naive_local(),
+    };
+    let updated_row = diesel::update(users.filter(id.eq(&item.id))).set(&update_user).get_result(&conn)?;
+    Ok(updated_row)
 }
