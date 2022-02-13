@@ -1,3 +1,4 @@
 rust/backend/target
 .env
 .cache
+node_modules
