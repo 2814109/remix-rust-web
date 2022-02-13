@@ -1,4 +1,4 @@
-use super::models::{NewUser, User};
+use super::models::{NewUser, User, PatchUser};
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -8,21 +8,23 @@ use diesel::dsl::{delete, insert_into, update};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
 
+use crate::diesel::ExpressionMethods;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputUser {
-    pub first_name: String,
-    pub last_name: String,
-    pub email: String,
+    first_name: String,
+    last_name: String,
+    email: String,
 }
 
 // update User
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateUser {
-    pub id: i32,
-    pub first_name: String,
-    pub last_name: String,
-    pub email: String,
+    id: i32,
+    first_name: String,
+    last_name: String,
+    email: String,
 }
 
 
@@ -64,11 +66,12 @@ pub async fn add_user(
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-// Handler for Put /users/{id}
+// Handler for PATCH /users/{id}
 pub async fn update_user(
     db: web::Data<Pool>,
     item: web::Json<UpdateUser>,
 ) -> Result<HttpResponse, Error> {
+    println!("hello there!");
     Ok(web::block(move || update_single_user(db, item))
         .await
         .map(|user| HttpResponse::Created().json(user))
@@ -119,12 +122,12 @@ fn update_single_user(
     item: web::Json<UpdateUser>,
 ) -> Result<User, diesel::result::Error>{
     let conn = db.get().unwrap();
-    let update_user = NewUser {
+    let update_user = PatchUser {
     first_name: &item.first_name,
     last_name: &item.last_name,
     email: &item.email,
     created_at: chrono::Local::now().naive_local(),
     };
-    let updated_row = diesel::update(users.filter(id.eq(&item.id))).set(&update_user).get_result(&conn)?;
+    let updated_row = update(users.find(&item.id)).set(&update_user).get_result(&conn)?;
     Ok(updated_row)
 }
