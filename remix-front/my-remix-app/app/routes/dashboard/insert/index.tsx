@@ -1,4 +1,16 @@
 import { FC } from "react";
+import type { LinksFunction } from "remix";
+
+import styles from "~/styles/form.css";
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: "stylesheet",
+      href: styles,
+    },
+  ];
+};
+
 const Index: FC = () => {
   return (
     <form>
@@ -17,10 +29,10 @@ type FormItemType = {
 };
 const FormItem: FC<FormItemType> = ({ tite, type }) => {
   return (
-    <p>
-      <label>{tite}</label>
-      <input type={type} />
-    </p>
+    <>
+      <label className="label-item">{tite}</label>
+      <input className="input-item" type={type} />
+    </>
   );
 };
 

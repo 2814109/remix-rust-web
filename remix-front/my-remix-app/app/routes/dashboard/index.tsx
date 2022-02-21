@@ -8,7 +8,8 @@ const Index: FC = () => {
       <tr>
         <th>Company</th>
         <th>Contact</th>
-        <th>Country</th> <th>Action</th>
+        <th>Country</th>
+        <th>Action</th>
       </tr>
       <tr>
         <td>Alfreds Futterkiste</td>
