@@ -13,14 +13,14 @@ services:
       - ./postgres:/docker-entrypoint-initdb.d:delegated
   backend:
     build:
-      context: ./rust/backend
+      context: ./rust-backend
       dockerfile: Dockerfile
     container_name: rust-app
     restart: always
     ports:
       - "9000:9000"
     volumes:
-      - ./rust/backend:/usr/src/app:delegated
+      - ./rust-backend:/usr/src/app:delegated
     command: /bin/sh -c "cargo run --release && cargo watch -x run"
     tty: true
     env_file:

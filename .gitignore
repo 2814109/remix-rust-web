@@ -1,4 +1,4 @@
-rust/backend/target
+rust-backend/target
 .env
 .cache
 node_modules
