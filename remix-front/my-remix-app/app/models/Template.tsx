@@ -1,11 +1,11 @@
-export type Product = {
+export type Template = {
   country: string;
   productName: string;
   age: number | undefined;
   type: string;
 };
 
-export const productTemplate: Product = {
+export const TemplateTemplate: Template = {
   country: "",
   productName: "",
   age: undefined,

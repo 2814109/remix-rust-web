@@ -1,28 +1,20 @@
 import { ChangeEvent, FC, useState } from "react";
-import type { LinksFunction } from "remix";
+import FormTitile from "~/components/form/FormTitle";
 import InputItem from "~/components/form/InputItem";
 import LabelItem from "~/components/form/LabelItem";
 import MainFrame from "~/components/layout/MainFrame";
-import styles from "~/styles/layout.css";
 import CenterWrap from "~/components/layout/CenterWrap";
-import { Product, productTemplate } from "~/models/Product";
+import { Template, TemplateTemplate } from "~/models/Template";
 import VerticalPadding from "~/components/layout/VerticalPadding";
-export const links: LinksFunction = () => {
-  return [
-    {
-      rel: "stylesheet",
-      href: styles,
-    },
-  ];
-};
 
 const Index: FC = () => {
-  const [formData, setFormData] = useState<Product>(productTemplate);
+  const [formData, setFormData] = useState<Template>(TemplateTemplate);
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
   return (
     <MainFrame>
+      <FormTitile text={"New Form"} />
       <form className="form-width">
         <VerticalPadding>
           <LabelItem text="Country" required={true} />

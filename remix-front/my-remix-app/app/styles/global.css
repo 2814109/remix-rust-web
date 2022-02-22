@@ -6,8 +6,7 @@
   --color-primary-dark: hsl(230, 100%, 40%);
   --color-gray-dark: hsl(0, 0%, 60%);
   --color-gray-light: hsl(0, 0%, 90%);
-  --font-body: -apple-system, "Segoe UI", Helvetica Neue, Helvetica, Roboto,
-    Arial, sans-serif, system-ui, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-body: -apple-system, "Segoe UI", Helvetica Neue, Helvetica, Roboto, Arial, sans-serif, system-ui, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 html {
@@ -52,33 +51,4 @@ a {
 a:hover {
   color: var(--color-primary-dark);
   text-decoration: underline;
-}
-
-/* Header */
-
-.header {
-  display: flex;
-  flex-direction: row;
-  background-color: black;
-  color: white;
-  padding: 0 16px;
-}
-
-.header--contents--left {
-  margin-right: auto;
-}
-.header--contents--right {
-  display: flex;
-  justify-content: flex-end;
-}
-.header--contents__item {
-  margin: 16px;
-  font-size: 36px;
-  color: white;
-}
-.header--contents__item:hover {
-  margin: 16px;
-  font-size: 36px;
-  color: white;
-  text-decoration: none;
 }
