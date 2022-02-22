@@ -2,7 +2,7 @@ import { VFC } from "react";
 import { Outlet } from "remix";
 import Sidebar from "~/components/utils/Sidebar";
 import type { LinksFunction } from "remix";
-import styles from "~/styles/layout.css";
+import styles from "~/styles/dashboard.css";
 import type { LoaderFunction } from "remix";
 import { authenticator, User } from "~/auth.server";
 
