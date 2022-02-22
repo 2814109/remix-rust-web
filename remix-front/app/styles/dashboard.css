@@ -7,6 +7,18 @@
   flex: 1;
 }
 
+.logout-wrap {
+  position: absolute;
+  bottom: 50px;
+}
+.logout {
+  width: 200px;
+  height: 50px;
+  border-radius: 30px;
+  background-color: white;
+  font-size: 20px;
+}
+
 .sidebar {
   padding: 24px 14px;
   width: 250px;

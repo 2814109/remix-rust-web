@@ -14,10 +14,11 @@ const Sidebar: FC = () => {
       <SidebarItem link={"/dashboard/template"} label={"template"} />
       <SidebarItem link={"/dashboard/user"} label={"user"} />
       <SidebarItem link={"/dashboard/scotch"} label={"scotch"} />
-
-      <form action="logout" method="post">
-        <button>Logout</button>
-      </form>
+      <div className="logout-wrap">
+        <form action="logout" method="post">
+          <button className="logout">Logout</button>
+        </form>
+      </div>
     </aside>
   );
 };
