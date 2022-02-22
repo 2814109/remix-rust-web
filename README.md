@@ -7,3 +7,7 @@
 - curl -v 0.0.0.0:9000/users
 
 - export TOKEN=
+
+## ログアウト処理
+
+AUTH0_RETURN_TO_URL と Allowed Logout URLs 　を一緒にする必要がある
