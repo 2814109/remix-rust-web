@@ -1,41 +1,19 @@
+mod auth;
 mod errors;
 mod handlers;
 mod models;
 mod schema;
-mod auth;
 
 #[macro_use]
 extern crate diesel;
 
-
-use actix_web_httpauth::extractors::bearer::{BearerAuth, Config};
-use actix_web_httpauth::extractors::AuthenticationError;
-use actix_web_httpauth::middleware::HttpAuthentication;
-
-use actix_web::{dev::ServiceRequest, web, App, Error, HttpServer};
+use actix_cors::Cors;
+use actix_web::{web, App, HttpServer};
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
-
-async fn validator(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
-    let config = req
-        .app_data::<Config>()
-        .map(|data| data.get_ref().clone())
-        .unwrap_or_else(Default::default);
-    match auth::validate_token(credentials.token()) {
-        Ok(res) => {
-            if res == true {
-                Ok(req)
-            } else {
-                Err(AuthenticationError::from(config).into())
-            }
-        }
-        Err(_) => Err(AuthenticationError::from(config).into()),
-    }
-}
-
 pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
     std::env::set_var("RUST_LOG", "debug");
@@ -48,15 +26,20 @@ async fn main() -> std::io::Result<()> {
 
     // Start http server
     HttpServer::new(move || {
-            let auth = HttpAuthentication::bearer(validator);
-            App::new()
-                .wrap(auth)
-                .data(pool.clone())
-                .route("/users", web::get().to(handlers::get_users))
-                .route("/users/{id}", web::get().to(handlers::get_user_by_id))
-                .route("/users", web::post().to(handlers::add_user))
-                .route("/users/{id}", web::delete().to(handlers::delete_user))
-                .route("/users", web::patch().to(handlers::update_user))
+        // let cors = Cors::default()
+        //     .allowed_origin("*")
+        //     // .allowed_origin_fn(|origin, _req_head| origin.as_bytes().ends_with(b".rust-lang.org"))
+        //     .allowed_methods(vec!["GET", "POST"])
+        //     .max_age(3600);
+        let cors = Cors::permissive();
+        App::new()
+            .wrap(cors)
+            .data(pool.clone())
+            .route("/users", web::get().to(handlers::get_users))
+            .route("/users/{id}", web::get().to(handlers::get_user_by_id))
+            .route("/users", web::post().to(handlers::add_user))
+            .route("/users/{id}", web::delete().to(handlers::delete_user))
+            .route("/users", web::patch().to(handlers::update_user))
     })
     .bind("0.0.0.0:9000")?
     .run()

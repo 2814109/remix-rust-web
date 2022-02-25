@@ -4,40 +4,35 @@ import InputItem from "~/components/form/InputItem";
 import LabelItem from "~/components/form/LabelItem";
 import MainFrame from "~/components/layout/MainFrame";
 import CenterWrap from "~/components/layout/CenterWrap";
-import { Template, TemplateTemplate } from "~/models/Template";
+import { User, UserTemplate } from "~/models/User";
 import VerticalPadding from "~/components/layout/VerticalPadding";
 
-const New: FC = () => {
-  const [formData, setFormData] = useState<Template>(TemplateTemplate);
+const Edit: FC = () => {
+  const [formData, setFormData] = useState<User>(UserTemplate);
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
   return (
     <MainFrame>
-      <FormTitile text={"New Form"} />
-      <form className="form-width">
+      <FormTitile text={"User Form"} />
+      <form className="form-width" method="patch" action="/dashboard/user/patch">
         <VerticalPadding>
-          <LabelItem text="Country" required={true} />
-          <InputItem name="country" onChange={onChange} type="text" value={formData.country} />
+          <LabelItem text="First Name" required={true} />
+          <InputItem name="first_name" onChange={onChange} type="text" value={formData.first_name} />
         </VerticalPadding>
 
         <VerticalPadding>
-          <LabelItem text="Product Name" required={true} />
-          <InputItem name="productName" onChange={onChange} type="text" value={formData.productName} />
+          <LabelItem text="Last Name" required={true} />
+          <InputItem name="last_name" onChange={onChange} type="text" value={formData.last_name} />
         </VerticalPadding>
 
         <VerticalPadding>
-          <LabelItem text="Age" required={true} />
-          <InputItem name="age" onChange={onChange} type="number" value={formData.age} />
-        </VerticalPadding>
-
-        <VerticalPadding>
-          <LabelItem text="Type" required={true} />
-          <InputItem name="type" onChange={onChange} type="text" value={formData.type} />
+          <LabelItem text="email" required={true} />
+          <InputItem name="email" onChange={onChange} type="text" value={formData.email} />
         </VerticalPadding>
 
         <CenterWrap>
-          <input className="form-button" type="submit" />
+          <input className="form-button" type="submit" value="submit" />
         </CenterWrap>
       </form>
     </MainFrame>
@@ -57,4 +52,4 @@ const FormItem: FC<FormItemType> = ({ tite, type }) => {
   );
 };
 
-export default New;
+export default Edit;

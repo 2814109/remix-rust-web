@@ -12,6 +12,7 @@ ENV HOME=/usr/src/app
 ENV SCCACHE_CACHE_SIZE="1G"
 ENV SCCACHE_DIR=$HOME/.cache/sccache
 ENV RUSTC_WRAPPER="/usr/local/cargo/bin/sccache"
+COPY ./src /usr/src/app/
 COPY ./Cargo.toml /usr/src/app/
 COPY ./Cargo.lock /usr/src/app/
 EXPOSE 9000

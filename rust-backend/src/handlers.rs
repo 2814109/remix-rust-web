@@ -1,4 +1,4 @@
-use super::models::{NewUser, User, PatchUser};
+use super::models::{NewUser, PatchUser, User};
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -7,9 +7,6 @@ use actix_web::{web, Error, HttpResponse};
 use diesel::dsl::{delete, insert_into, update};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
-
-use crate::diesel::ExpressionMethods;
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputUser {
@@ -26,7 +23,6 @@ pub struct UpdateUser {
     last_name: String,
     email: String,
 }
-
 
 // Handler for GET /users
 pub async fn get_users(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
@@ -117,17 +113,19 @@ fn delete_single_user(db: web::Data<Pool>, user_id: i32) -> Result<usize, diesel
     Ok(count)
 }
 
-fn update_single_user(    
+fn update_single_user(
     db: web::Data<Pool>,
     item: web::Json<UpdateUser>,
-) -> Result<User, diesel::result::Error>{
+) -> Result<User, diesel::result::Error> {
     let conn = db.get().unwrap();
     let update_user = PatchUser {
-    first_name: &item.first_name,
-    last_name: &item.last_name,
-    email: &item.email,
-    created_at: chrono::Local::now().naive_local(),
+        first_name: &item.first_name,
+        last_name: &item.last_name,
+        email: &item.email,
+        created_at: chrono::Local::now().naive_local(),
     };
-    let updated_row = update(users.find(&item.id)).set(&update_user).get_result(&conn)?;
+    let updated_row = update(users.find(&item.id))
+        .set(&update_user)
+        .get_result(&conn)?;
     Ok(updated_row)
 }

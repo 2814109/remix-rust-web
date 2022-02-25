@@ -12,8 +12,8 @@ const Sidebar: FC = () => {
         </div>
       </div>
       <SidebarItem link={"/dashboard/template"} label={"template"} />
-      <SidebarItem link={"/dashboard/user"} label={"user"} />
-      <SidebarItem link={"/dashboard/scotch"} label={"scotch"} />
+      <SidebarItem link={"/dashboard/user/new"} label={"user"} />
+      <SidebarItem link={"/dashboard/scotch/new"} label={"scotch"} />
       <div className="logout-wrap">
         <form action="logout" method="post">
           <button className="logout">Logout</button>
