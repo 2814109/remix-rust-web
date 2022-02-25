@@ -15,7 +15,7 @@ const Edit: FC = () => {
   return (
     <MainFrame>
       <FormTitile text={"User Form"} />
-      <form className="form-width" method="patch" action="/dashboard/user/patch">
+      <form className="form-width" method="post" action="/dashboard/user/patch">
         <VerticalPadding>
           <LabelItem text="First Name" required={true} />
           <InputItem name="first_name" onChange={onChange} type="text" value={formData.first_name} />
@@ -36,19 +36,6 @@ const Edit: FC = () => {
         </CenterWrap>
       </form>
     </MainFrame>
-  );
-};
-
-type FormItemType = {
-  tite: string;
-  type: string;
-};
-const FormItem: FC<FormItemType> = ({ tite, type }) => {
-  return (
-    <>
-      <label className="label-item">{tite}</label>
-      <input className="input-item" type={type} />
-    </>
   );
 };
 

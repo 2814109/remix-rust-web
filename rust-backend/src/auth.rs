@@ -28,8 +28,8 @@
 //     Ok(res.is_ok())
 // }
 
-// fn fetch_jwks(uri: &str) -> Result<JWKS, Box<dyn Error>> {
-//     let mut res = reqwest::get(uri)?;
+// async fn fetch_jwks(uri: &str) -> Result<JWKS, Box<dyn Error>> {
+//     let mut res = reqwest::get(uri).await?;
 //     let val = res.json::<JWKS>()?;
 //     return Ok(val);
 // }

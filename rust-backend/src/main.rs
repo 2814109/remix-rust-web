@@ -23,14 +23,8 @@ async fn main() -> std::io::Result<()> {
     let pool: Pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
-
     // Start http server
     HttpServer::new(move || {
-        // let cors = Cors::default()
-        //     .allowed_origin("*")
-        //     // .allowed_origin_fn(|origin, _req_head| origin.as_bytes().ends_with(b".rust-lang.org"))
-        //     .allowed_methods(vec!["GET", "POST"])
-        //     .max_age(3600);
         let cors = Cors::permissive();
         App::new()
             .wrap(cors)

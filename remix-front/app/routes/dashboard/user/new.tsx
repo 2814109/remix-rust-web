@@ -12,6 +12,7 @@ const New: FC = () => {
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
+  console.log(formData);
   return (
     <MainFrame>
       <FormTitile text={"User Form"} />
@@ -36,19 +37,6 @@ const New: FC = () => {
         </CenterWrap>
       </form>
     </MainFrame>
-  );
-};
-
-type FormItemType = {
-  tite: string;
-  type: string;
-};
-const FormItem: FC<FormItemType> = ({ tite, type }) => {
-  return (
-    <>
-      <label className="label-item">{tite}</label>
-      <input className="input-item" type={type} />
-    </>
   );
 };
 
