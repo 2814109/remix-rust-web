@@ -3,10 +3,6 @@ import { LoaderFunction } from "remix";
 import { User } from "~/models/User";
 import { useLoaderData } from "remix";
 
-type UsersData = {
-  Users: User[];
-};
-
 export const loader: LoaderFunction = async () => {
   const response = await fetch("http://0.0.0.0:9000/users", {
     mode: "cors",
@@ -14,17 +10,11 @@ export const loader: LoaderFunction = async () => {
       "Content-Type": "application/json",
     },
   });
-
-  // const data: UsersData = {
-  //   Users: response,
-  // };
-
   return response.json();
 };
 
 const Index: FC = () => {
   const data: User[] = useLoaderData<[]>();
-  console.log(data);
   return (
     <>
       {data.map((data_element) => (
