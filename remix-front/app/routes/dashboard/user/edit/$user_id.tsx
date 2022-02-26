@@ -4,18 +4,32 @@ import InputItem from "~/components/form/InputItem";
 import LabelItem from "~/components/form/LabelItem";
 import MainFrame from "~/components/layout/MainFrame";
 import CenterWrap from "~/components/layout/CenterWrap";
-import { User, UserTemplate } from "~/models/User";
+import { User } from "~/models/User";
 import VerticalPadding from "~/components/layout/VerticalPadding";
+import { LoaderFunction } from "remix";
+import { useLoaderData } from "remix";
 
-const New: FC = () => {
-  const [formData, setFormData] = useState<User>(UserTemplate);
+export const loader: LoaderFunction = async ({ params }) => {
+  const response = await fetch(`http://0.0.0.0:9000/users/${params.user_id}`, {
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.json();
+};
+const Edit: FC = () => {
+  const data: User = useLoaderData();
+
+  const [formData, setFormData] = useState<User>(data);
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
   return (
     <MainFrame>
       <FormTitile text={"User Form"} />
-      <form className="form-width" method="post" action="/dashboard/user/post">
+      <form className="form-width" method="post" action="/dashboard/user/patch">
+        <input type="hidden" name="user_id" value={data.id} />
         <VerticalPadding>
           <LabelItem text="First Name" required={true} />
           <InputItem name="first_name" onChange={onChange} type="text" value={formData.first_name} />
@@ -39,4 +53,4 @@ const New: FC = () => {
   );
 };
 
-export default New;
+export default Edit;

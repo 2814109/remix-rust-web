@@ -7,7 +7,7 @@ import CenterWrap from "~/components/layout/CenterWrap";
 import { Template, TemplateTemplate } from "~/models/Template";
 import VerticalPadding from "~/components/layout/VerticalPadding";
 
-const Index: FC = () => {
+const New: FC = () => {
   const [formData, setFormData] = useState<Template>(TemplateTemplate);
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -57,4 +57,4 @@ const FormItem: FC<FormItemType> = ({ tite, type }) => {
   );
 };
 
-export default Index;
+export default New;

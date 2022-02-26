@@ -58,3 +58,12 @@ a:hover {
   justify-content: center;
   align-items: center;
 }
+
+table,
+th,
+td {
+  border: 1px solid;
+}
+table tr:nth-child(odd) td {
+  background: #eee;
+}
