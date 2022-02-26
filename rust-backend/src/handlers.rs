@@ -67,7 +67,6 @@ pub async fn update_user(
     db: web::Data<Pool>,
     item: web::Json<UpdateUser>,
 ) -> Result<HttpResponse, Error> {
-    println!("hello there!");
     Ok(web::block(move || update_single_user(db, item))
         .await
         .map(|user| HttpResponse::Created().json(user))

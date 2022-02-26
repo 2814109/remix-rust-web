@@ -1,4 +1,14 @@
-# rust-postgres
+# migration
+
+## diesel
+
+### create migration file
+
+diesel migration generate create\_{table_name}
+
+### run migration
+
+diesel migration run
 
 ## command on docker container of rust-app
 
