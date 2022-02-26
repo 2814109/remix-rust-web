@@ -1,7 +1,8 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { LoaderFunction } from "remix";
 import { User } from "~/models/User";
 import { useLoaderData } from "remix";
+import { Link } from "remix";
 
 export const loader: LoaderFunction = async () => {
   const response = await fetch("http://0.0.0.0:9000/users", {
@@ -14,15 +15,41 @@ export const loader: LoaderFunction = async () => {
 };
 
 const Index: FC = () => {
-  const data: User[] = useLoaderData<[]>();
+  const users: User[] = useLoaderData<[]>();
   return (
     <>
-      {data.map((data_element) => (
-        <h1>
-          {data_element.last_name}
-          <span>{data_element.id}</span>
-        </h1>
-      ))}
+      <Link to="/dashboard/user/new">Create User</Link>
+      <div className=" centering">
+        <table className={"user-table"}>
+          <thead>
+            <tr>
+              <th>User id</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.first_name}</td>
+                <td>{user.last_name}</td>
+                <td>{user.email}</td>
+                <td className="aciton-area">
+                  <Link className="aciton-area-contents" to={`/dashboard/user/edit/${user.id}`}>
+                    Edit
+                  </Link>
+                  <Link className="aciton-area-contents" to={`/dashboard/user/show/${user.id}`}>
+                    Show
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

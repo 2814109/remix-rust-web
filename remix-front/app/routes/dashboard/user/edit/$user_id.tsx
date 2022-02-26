@@ -29,6 +29,7 @@ const Edit: FC = () => {
     <MainFrame>
       <FormTitile text={"User Form"} />
       <form className="form-width" method="post" action="/dashboard/user/patch">
+        <input type="hidden" name="user_id" value={data.id} />
         <VerticalPadding>
           <LabelItem text="First Name" required={true} />
           <InputItem name="first_name" onChange={onChange} type="text" value={formData.first_name} />

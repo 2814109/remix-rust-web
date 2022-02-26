@@ -12,7 +12,6 @@ const New: FC = () => {
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
-  console.log(formData);
   return (
     <MainFrame>
       <FormTitile text={"User Form"} />

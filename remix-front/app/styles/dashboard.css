@@ -5,6 +5,7 @@
 
 .base-contents {
   flex: 1;
+  padding: 24px;
 }
 
 .logout-wrap {
@@ -119,4 +120,16 @@
   font-size: 36px;
   color: white;
   text-decoration: none;
+}
+
+.user-table {
+  width: 80%;
+}
+
+.aciton-area {
+  display: flex;
+  justify-content: space-around;
+}
+.aciton-area-contents {
+  display: block;
 }
