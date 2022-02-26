@@ -6,7 +6,7 @@ CREATE TABLE scotch (
   age TEXT NOT NULL,
   label TEXT NOT NULL,
   edition TEXT NOT NULL,
-  status TEXT NOT NULL,
+  existence_id INTEGER NOT NULL REFERENCES status_of_existence(id),
   price INTEGER NOT NULL,
   created_at TIMESTAMP NOT NULL
 );
