@@ -9,19 +9,19 @@ import VerticalPadding from "~/components/layout/VerticalPadding";
 import { LoaderFunction } from "remix";
 import { useLoaderData } from "remix";
 import { getFetcher } from "~/libs/api/base";
-import { StatusOfExisteince } from "~/models/StatusOfExistence";
-import { ProducingAreas } from "~/models/ProducingAreas";
+import { ExistenceStatus } from "~/models/ExistenceStatus";
+import { ProducingArea } from "~/models/ProducingArea";
 import SelectItem from "~/components/form/SelectItem";
 
 export const loader: LoaderFunction = async () => {
-  const status_of_existence = await getFetcher("status_of_existence");
+  const existence_statuses = await getFetcher("existence_statuses");
   const producing_areas = await getFetcher("producing_areas");
-  return { status_of_existence: status_of_existence, producing_areas: producing_areas };
+  return { existence_statuses: existence_statuses, producing_areas: producing_areas };
 };
 
 const New: FC = () => {
-  const { status_of_existence, producing_areas }: { status_of_existence: StatusOfExisteince[]; producing_areas: ProducingAreas[] } = useLoaderData();
-  const option_status_of_existence = status_of_existence.map(({ id, status }) => {
+  const { existence_statuses, producing_areas }: { existence_statuses: ExistenceStatus[]; producing_areas: ProducingArea[] } = useLoaderData();
+  const option_status_of_existence = existence_statuses.map(({ id, status }) => {
     return { value: String(id), label: status };
   });
   const option_producing_areas = producing_areas.map(({ id, name }) => {
@@ -36,10 +36,10 @@ const New: FC = () => {
   return (
     <MainFrame>
       <FormTitile text={"Scotch"} />
-      <form className="form-width">
+      <form className="form-width" method="post" action="/dashboard/scotch/post">
         <VerticalPadding>
           <LabelItem text="Producing Area" required={true} />
-          <SelectItem options={option_producing_areas} onChange={onChange} name="producing_area" value={formData.producing_area} />
+          <SelectItem options={option_producing_areas} onChange={onChange} name="producing_area" value={String(formData.producing_area)} />
         </VerticalPadding>
 
         <VerticalPadding>
@@ -64,7 +64,7 @@ const New: FC = () => {
 
         <VerticalPadding>
           <LabelItem text="Status" required={true} />
-          <SelectItem options={option_status_of_existence} onChange={onChange} name="status" value={formData.status} />
+          <SelectItem options={option_status_of_existence} onChange={onChange} name="status" value={String(formData.status)} />
         </VerticalPadding>
         <CenterWrap>
           <input className="form-button" type="submit" />

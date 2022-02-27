@@ -1,4 +1,4 @@
-export type ProducingAreas = {
+export type ProducingArea = {
   id: number;
   name: string;
 };

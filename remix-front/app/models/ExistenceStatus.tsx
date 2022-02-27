@@ -1,4 +1,4 @@
-export type StatusOfExisteince = {
+export type ExistenceStatus = {
   id: number;
   status: string;
 };

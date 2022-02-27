@@ -1,27 +1,28 @@
 table! {
-    producing_areas (id) {
+    existence_statuses (id) {
         id -> Int4,
-        name -> Text,
+        status -> Text,
     }
 }
 
 table! {
-    scotch (id) {
+    liquors (id) {
         id -> Int4,
         producing_area_id -> Int4,
-        age -> Text,
+        age -> Int4,
         label -> Text,
         edition -> Text,
         existence_id -> Int4,
         price -> Int4,
         created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
 table! {
-    status_of_existence (id) {
+    producing_areas (id) {
         id -> Int4,
-        status -> Text,
+        name -> Text,
     }
 }
 
@@ -35,12 +36,12 @@ table! {
     }
 }
 
-joinable!(scotch -> producing_areas (producing_area_id));
-joinable!(scotch -> status_of_existence (existence_id));
+joinable!(liquors -> existence_statuses (existence_id));
+joinable!(liquors -> producing_areas (producing_area_id));
 
 allow_tables_to_appear_in_same_query!(
+    existence_statuses,
+    liquors,
     producing_areas,
-    scotch,
-    status_of_existence,
     users,
 );

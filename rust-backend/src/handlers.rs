@@ -1,4 +1,4 @@
-use super::models::{NewUser, PatchUser, User,StatusOfExistence,ProducingAreas};
+use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,Liquor, NewLiquor};
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -7,8 +7,9 @@ use actix_web::{web, Error, HttpResponse};
 use diesel::dsl::{delete, insert_into, update};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
-use super::schema::status_of_existence::dsl::*;
+use super::schema::existence_statuses::dsl::*;
 use super::schema::producing_areas::dsl::*;
+use super::schema::liquors::dsl::*;
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -25,6 +26,16 @@ pub struct UpdateUser {
     first_name: String,
     last_name: String,
     email: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct InputLiquor {
+        producing_area_id: i32,
+        age: i32,
+        label: String,
+        edition: String,
+        existence_id: i32,
+        price: i32,
 }
 
 // Handler for GET /users
@@ -133,16 +144,16 @@ fn update_single_user(
 }
 
 
-pub async fn get_status_of_existence(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || get_all_status_of_existence(db))
+pub async fn get_existence_statuses(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_existence_statuses(db))
         .await
         .map(|user| HttpResponse::Ok().json(user))
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_status_of_existence(pool: web::Data<Pool>) -> Result<Vec<StatusOfExistence>, diesel::result::Error> {
+fn get_all_existence_statuses(pool: web::Data<Pool>) -> Result<Vec<ExistenceStatus>, diesel::result::Error> {
     let conn = pool.get().unwrap();
-    let items = status_of_existence.load::<StatusOfExistence>(&conn)?;
+    let items = existence_statuses.load::<ExistenceStatus>(&conn)?;
     Ok(items)
 }
 
@@ -153,8 +164,37 @@ pub async fn get_producing_areas(db: web::Data<Pool>) -> Result<HttpResponse, Er
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_producing_areas(pool: web::Data<Pool>) -> Result<Vec<ProducingAreas>, diesel::result::Error> {
+fn get_all_producing_areas(pool: web::Data<Pool>) -> Result<Vec<ProducingArea>, diesel::result::Error> {
     let conn = pool.get().unwrap();
-    let items = producing_areas.load::<ProducingAreas>(&conn)?;
+    let items = producing_areas.load::<ProducingArea>(&conn)?;
     Ok(items)
+}
+
+pub async fn add_liquor(
+    db: web::Data<Pool>,
+    item: web::Json<InputLiquor>,
+) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || add_single_liquor(db, item))
+        .await
+        .map(|liquor| HttpResponse::Created().json(liquor))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+fn add_single_liquor(
+    db: web::Data<Pool>,
+    item: web::Json<InputLiquor>,
+) -> Result<Liquor, diesel::result::Error> {
+    let conn = db.get().unwrap();
+    let new_liquor = NewLiquor {
+        producing_area_id: &item.producing_area_id,
+        age: &item.age,
+        label: &item.label,
+        edition: &item.edition,
+        existence_id: &item.existence_id,
+        price: &item.price,
+        created_at: chrono::Local::now().naive_local(),
+        updated_at: chrono::Local::now().naive_local(),
+    };
+    let res = insert_into(liquors).values(&new_liquor).get_result(&conn)?;
+    Ok(res)
 }
