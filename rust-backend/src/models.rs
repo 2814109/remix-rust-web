@@ -34,3 +34,9 @@ pub struct StatusOfExistence {
     pub id: i32,
     pub status: String,
 }
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct ProducingAreas {
+    pub id: i32,
+    pub name: String,
+}

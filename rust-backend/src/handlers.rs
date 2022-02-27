@@ -1,4 +1,4 @@
-use super::models::{NewUser, PatchUser, User};
+use super::models::{NewUser, PatchUser, User,StatusOfExistence,ProducingAreas};
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -7,8 +7,9 @@ use actix_web::{web, Error, HttpResponse};
 use diesel::dsl::{delete, insert_into, update};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
-use super::models::{StatusOfExistence};
 use super::schema::status_of_existence::dsl::*;
+use super::schema::producing_areas::dsl::*;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputUser {
@@ -142,5 +143,18 @@ pub async fn get_status_of_existence(db: web::Data<Pool>) -> Result<HttpResponse
 fn get_all_status_of_existence(pool: web::Data<Pool>) -> Result<Vec<StatusOfExistence>, diesel::result::Error> {
     let conn = pool.get().unwrap();
     let items = status_of_existence.load::<StatusOfExistence>(&conn)?;
+    Ok(items)
+}
+
+pub async fn get_producing_areas(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_producing_areas(db))
+        .await
+        .map(|user| HttpResponse::Ok().json(user))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+fn get_all_producing_areas(pool: web::Data<Pool>) -> Result<Vec<ProducingAreas>, diesel::result::Error> {
+    let conn = pool.get().unwrap();
+    let items = producing_areas.load::<ProducingAreas>(&conn)?;
     Ok(items)
 }

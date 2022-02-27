@@ -1,5 +1,5 @@
 export type Scotch = {
-  producingArea: string;
+  producing_area: string;
   age: number | undefined;
   label: string;
   edition: "limited" | "none limited" | undefined;
@@ -8,7 +8,7 @@ export type Scotch = {
 };
 
 export const ScotchTemplate = {
-  producingArea: "",
+  producing_area: "",
   age: undefined,
   label: "",
   edition: undefined,

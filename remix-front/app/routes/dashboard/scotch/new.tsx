@@ -10,17 +10,24 @@ import { LoaderFunction } from "remix";
 import { useLoaderData } from "remix";
 import { getFetcher } from "~/libs/api/base";
 import { StatusOfExisteince } from "~/models/StatusOfExistence";
+import { ProducingAreas } from "~/models/ProducingAreas";
 import SelectItem from "~/components/form/SelectItem";
 
 export const loader: LoaderFunction = async () => {
-  return await getFetcher("status_of_existence");
+  const status_of_existence = await getFetcher("status_of_existence");
+  const producing_areas = await getFetcher("producing_areas");
+  return { status_of_existence: status_of_existence, producing_areas: producing_areas };
 };
 
 const New: FC = () => {
-  const status_of_existence: StatusOfExisteince[] = useLoaderData<[]>();
+  const { status_of_existence, producing_areas }: { status_of_existence: StatusOfExisteince[]; producing_areas: ProducingAreas[] } = useLoaderData();
   const option_status_of_existence = status_of_existence.map(({ id, status }) => {
     return { value: String(id), label: status };
   });
+  const option_producing_areas = producing_areas.map(({ id, name }) => {
+    return { value: String(id), label: name };
+  });
+
   const [formData, setFormData] = useState<Scotch>(ScotchTemplate);
   const onChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -32,7 +39,7 @@ const New: FC = () => {
       <form className="form-width">
         <VerticalPadding>
           <LabelItem text="Producing Area" required={true} />
-          <InputItem name="producingArea" onChange={onChange} type="text" value={formData.producingArea} />
+          <SelectItem options={option_producing_areas} onChange={onChange} name="producing_area" value={formData.producing_area} />
         </VerticalPadding>
 
         <VerticalPadding>
@@ -58,7 +65,6 @@ const New: FC = () => {
         <VerticalPadding>
           <LabelItem text="Status" required={true} />
           <SelectItem options={option_status_of_existence} onChange={onChange} name="status" value={formData.status} />
-          {/* <InputItem name="status" onChange={onChange} type="text" value={formData.status} /> */}
         </VerticalPadding>
         <CenterWrap>
           <input className="form-button" type="submit" />
