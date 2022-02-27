@@ -5,4 +5,4 @@ CREATE TABLE status_of_existence (
   status TEXT NOT NULL
 );
 
-INSERT INTO status_of_existence(status) VALUES ('plans_to_purchase'),('owned'),('consumed');
+INSERT INTO status_of_existence(status) VALUES ('購入予定'),('所有している'),('以前所有していた');

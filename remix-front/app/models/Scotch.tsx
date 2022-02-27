@@ -3,7 +3,7 @@ export type Scotch = {
   age: number | undefined;
   label: string;
   edition: "limited" | "none limited" | undefined;
-  status: "have" | "had" | "want" | undefined;
+  status: string;
   price: number | undefined;
 };
 
@@ -12,6 +12,6 @@ export const ScotchTemplate = {
   age: undefined,
   label: "",
   edition: undefined,
-  status: undefined,
+  status: "",
   price: undefined,
 };

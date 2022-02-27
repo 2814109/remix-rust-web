@@ -7,6 +7,8 @@ use actix_web::{web, Error, HttpResponse};
 use diesel::dsl::{delete, insert_into, update};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
+use super::models::{StatusOfExistence};
+use super::schema::status_of_existence::dsl::*;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputUser {
@@ -127,4 +129,18 @@ fn update_single_user(
         .set(&update_user)
         .get_result(&conn)?;
     Ok(updated_row)
+}
+
+
+pub async fn get_status_of_existence(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_status_of_existence(db))
+        .await
+        .map(|user| HttpResponse::Ok().json(user))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+fn get_all_status_of_existence(pool: web::Data<Pool>) -> Result<Vec<StatusOfExistence>, diesel::result::Error> {
+    let conn = pool.get().unwrap();
+    let items = status_of_existence.load::<StatusOfExistence>(&conn)?;
+    Ok(items)
 }

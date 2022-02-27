@@ -6,10 +6,23 @@ import MainFrame from "~/components/layout/MainFrame";
 import CenterWrap from "~/components/layout/CenterWrap";
 import { Scotch, ScotchTemplate } from "~/models/Scotch";
 import VerticalPadding from "~/components/layout/VerticalPadding";
+import { LoaderFunction } from "remix";
+import { useLoaderData } from "remix";
+import { getFetcher } from "~/libs/api/base";
+import { StatusOfExisteince } from "~/models/StatusOfExistence";
+import SelectItem from "~/components/form/SelectItem";
+
+export const loader: LoaderFunction = async () => {
+  return await getFetcher("status_of_existence");
+};
 
 const New: FC = () => {
+  const status_of_existence: StatusOfExisteince[] = useLoaderData<[]>();
+  const option_status_of_existence = status_of_existence.map(({ id, status }) => {
+    return { value: String(id), label: status };
+  });
   const [formData, setFormData] = useState<Scotch>(ScotchTemplate);
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
@@ -44,7 +57,8 @@ const New: FC = () => {
 
         <VerticalPadding>
           <LabelItem text="Status" required={true} />
-          <InputItem name="status" onChange={onChange} type="text" value={formData.status} />
+          <SelectItem options={option_status_of_existence} onChange={onChange} name="status" value={formData.status} />
+          {/* <InputItem name="status" onChange={onChange} type="text" value={formData.status} /> */}
         </VerticalPadding>
         <CenterWrap>
           <input className="form-button" type="submit" />

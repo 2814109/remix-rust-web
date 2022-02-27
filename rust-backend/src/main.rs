@@ -3,7 +3,7 @@ mod errors;
 mod handlers;
 mod models;
 mod schema;
-
+// mod routes;
 #[macro_use]
 extern crate diesel;
 
@@ -34,6 +34,7 @@ async fn main() -> std::io::Result<()> {
             .route("/users", web::post().to(handlers::add_user))
             .route("/users/{id}", web::delete().to(handlers::delete_user))
             .route("/users", web::patch().to(handlers::update_user))
+            .route("status_of_existence",  web::get().to(handlers::get_status_of_existence))
     })
     .bind("0.0.0.0:9000")?
     .run()

@@ -27,3 +27,10 @@ pub struct PatchUser<'a> {
     pub email: &'a str,
     pub created_at: chrono::NaiveDateTime,
 }
+
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct StatusOfExistence {
+    pub id: i32,
+    pub status: String,
+}

@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, WheelEventHandler } from "react";
+import { ChangeEvent, FC } from "react";
 
 type InputItemProps = {
   name: string;

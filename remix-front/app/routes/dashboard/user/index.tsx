@@ -3,15 +3,10 @@ import { LoaderFunction } from "remix";
 import { User } from "~/models/User";
 import { useLoaderData } from "remix";
 import { Link } from "remix";
+import { getFetcher } from "~/libs/api/base";
 
 export const loader: LoaderFunction = async () => {
-  const response = await fetch("http://0.0.0.0:9000/users", {
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return response.json();
+  return await getFetcher("users");
 };
 
 const Index: FC = () => {
