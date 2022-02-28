@@ -19,5 +19,4 @@ const Index: FC = () => {
 
   return <Link to="/dashboard/scotch/new">Create Scotch</Link>;
 };
-
 export default Index;
