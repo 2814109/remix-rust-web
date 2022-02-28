@@ -1,4 +1,5 @@
 export type Scotch = {
+  id?: number;
   producing_area: number;
   age: number;
   label: string;
