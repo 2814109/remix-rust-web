@@ -8,15 +8,13 @@ import { ProducingArea } from "~/models/ProducingArea";
 import { Link } from "remix";
 
 export const loader: LoaderFunction = async () => {
-  const status_of_existence = await getFetcher("existence_statuses");
-  const producing_areas = await getFetcher("producing_areas");
+  const liquors = await getFetcher("liquors");
 
-  return { status_of_existence: status_of_existence, producing_areas: producing_areas };
+  return liquors;
 };
 const Index: FC = () => {
-  const { status_of_existence, producing_areas }: { status_of_existence: ExistenceStatus[]; producing_areas: ProducingArea[] } = useLoaderData();
-  console.log(status_of_existence);
-  console.log(producing_areas);
+  const liquors = useLoaderData();
+  console.log(liquors);
   // const status_of_existence: StatusOfExisteince[] = useLoaderData<[]>();
 
   return <Link to="/dashboard/scotch/new">Create Scotch</Link>;

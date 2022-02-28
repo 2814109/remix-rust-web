@@ -1,6 +1,5 @@
 import { ActionFunction, redirect } from "remix";
 import { postFetcher } from "~/libs/api/base";
-import { Scotch } from "~/models/Scotch";
 export const action: ActionFunction = async ({ request }) => {
   const formData: FormData = await request.formData();
   const postData = {

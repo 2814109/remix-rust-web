@@ -198,3 +198,16 @@ fn add_single_liquor(
     let res = insert_into(liquors).values(&new_liquor).get_result(&conn)?;
     Ok(res)
 }
+
+pub async fn get_liquors(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_liquors(db))
+        .await
+        .map(|liquor| HttpResponse::Ok().json(liquor))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<Liquor>, diesel::result::Error> {
+    let conn = pool.get().unwrap();
+    let items = liquors.load::<Liquor>(&conn)?;
+    Ok(items)
+}
