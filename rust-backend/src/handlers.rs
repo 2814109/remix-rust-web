@@ -1,4 +1,4 @@
-use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,Liquor, NewLiquor};
+use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,Liquor, NewLiquor,LiquorRow};
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -183,7 +183,7 @@ pub async fn add_liquor(
 fn add_single_liquor(
     db: web::Data<Pool>,
     item: web::Json<InputLiquor>,
-) -> Result<Liquor, diesel::result::Error> {
+) -> Result<LiquorRow, diesel::result::Error> {
     let conn = db.get().unwrap();
     let new_liquor = NewLiquor {
         producing_area_id: &item.producing_area_id,
@@ -206,8 +206,20 @@ pub async fn get_liquors(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<Liquor>, diesel::result::Error> {
+fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<(LiquorRow, ProducingArea)>, diesel::result::Error> {
     let conn = pool.get().unwrap();
-    let items = liquors.load::<Liquor>(&conn)?;
+     let items =  liquors.inner_join(producing_areas)
+    //  .select((
+    //      liquors::dsl::id,
+    //      liquors::dsl::age,
+    //      liquors::dsl::label,
+    //      liquors::dsl::edition,
+    //      liquors::dsl::existence_id,
+    //      liquors::dsl::price,
+    //      liquors::dsl::created_at,
+    //      liquors::dsl::updated_at,
+    //      (producing_areas::dsl::id, producing_areas::dsl::name)
+    // ))
+    .load::<(LiquorRow,ProducingArea)>(&conn)?;
     Ok(items)
 }
