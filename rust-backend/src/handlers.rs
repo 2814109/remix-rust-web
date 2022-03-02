@@ -206,8 +206,8 @@ pub async fn get_liquors(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<Liquor>, diesel::result::Error> {
+fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<(Liquor,ProducingArea)>, diesel::result::Error> {
     let conn = pool.get().unwrap();
-    let items = liquors.load::<Liquor>(&conn)?;
+    let items = liquors.inner_join(producing_areas).load::<(Liquor,ProducingArea)>(&conn)?;
     Ok(items)
 }
