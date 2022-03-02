@@ -207,7 +207,9 @@ pub async fn get_liquors(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
 }
 
 fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<JoinedLiquor>, diesel::result::Error> {
+     use super::schema::liquors;
     let conn = pool.get().unwrap();
-    let items = liquors.inner_join(producing_areas).select((label, name)).load::<JoinedLiquor>(&conn)?;
+    let items = liquors::table.inner_join(producing_areas).inner_join(existence_statuses).select((
+        liquors::id, label, name,status, price)).load::<JoinedLiquor>(&conn)?;
     Ok(items)
 }

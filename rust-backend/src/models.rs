@@ -71,6 +71,9 @@ pub struct NewLiquor<'a> {
 #[derive(Debug, Serialize, Deserialize, Queryable)]
 
 pub struct JoinedLiquor {
+    pub id: i32,
     pub label: String,
-    pub producing_area_name: String
+    pub producing_area_name: String,
+    pub status: String,
+    pub price: i32
 }
