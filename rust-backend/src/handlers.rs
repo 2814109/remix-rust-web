@@ -1,4 +1,4 @@
-use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,Liquor, NewLiquor};
+use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,Liquor, NewLiquor, JoinedLiquor};
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -206,8 +206,8 @@ pub async fn get_liquors(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<(Liquor,ProducingArea)>, diesel::result::Error> {
+fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<JoinedLiquor>, diesel::result::Error> {
     let conn = pool.get().unwrap();
-    let items = liquors.inner_join(producing_areas).load::<(Liquor,ProducingArea)>(&conn)?;
+    let items = liquors.inner_join(producing_areas).select((label, name)).load::<JoinedLiquor>(&conn)?;
     Ok(items)
 }

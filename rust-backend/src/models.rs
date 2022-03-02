@@ -67,3 +67,10 @@ pub struct NewLiquor<'a> {
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
 }
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+
+pub struct JoinedLiquor {
+    pub label: String,
+    pub producing_area_name: String
+}
