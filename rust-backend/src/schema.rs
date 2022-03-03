@@ -1,4 +1,11 @@
 table! {
+    countries (id) {
+        id -> Int4,
+        country_name -> Text,
+    }
+}
+
+table! {
     existence_statuses (id) {
         id -> Int4,
         status -> Text,
@@ -40,6 +47,7 @@ joinable!(liquors -> existence_statuses (existence_id));
 joinable!(liquors -> producing_areas (producing_area_id));
 
 allow_tables_to_appear_in_same_query!(
+    countries,
     existence_statuses,
     liquors,
     producing_areas,
