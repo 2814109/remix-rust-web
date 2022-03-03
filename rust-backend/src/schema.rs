@@ -23,6 +23,7 @@ table! {
         price -> Int4,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        country_id -> Int4,
     }
 }
 
@@ -43,6 +44,7 @@ table! {
     }
 }
 
+joinable!(liquors -> countries (country_id));
 joinable!(liquors -> existence_statuses (existence_id));
 joinable!(liquors -> producing_areas (producing_area_id));
 
