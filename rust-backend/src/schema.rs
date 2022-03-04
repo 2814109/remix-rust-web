@@ -37,7 +37,7 @@ table! {
         price -> Int4,
         created_at -> Timestamp,
         updated_at -> Timestamp,
-        field_id -> Nullable<Int4>,
+        field_id -> Int4,
     }
 }
 
