@@ -13,9 +13,16 @@ table! {
 }
 
 table! {
+    fields (id) {
+        id -> Int4,
+        country_id -> Int4,
+        producing_area_id -> Int4,
+    }
+}
+
+table! {
     liquors (id) {
         id -> Int4,
-        producing_area_id -> Int4,
         age -> Int4,
         label -> Text,
         edition -> Text,
@@ -23,7 +30,7 @@ table! {
         price -> Int4,
         created_at -> Timestamp,
         updated_at -> Timestamp,
-        country_id -> Int4,
+        field_id -> Int4,
     }
 }
 
@@ -44,13 +51,15 @@ table! {
     }
 }
 
-joinable!(liquors -> countries (country_id));
+joinable!(fields -> countries (country_id));
+joinable!(fields -> producing_areas (producing_area_id));
 joinable!(liquors -> existence_statuses (existence_id));
-joinable!(liquors -> producing_areas (producing_area_id));
+joinable!(liquors -> fields (field_id));
 
 allow_tables_to_appear_in_same_query!(
     countries,
     existence_statuses,
+    fields,
     liquors,
     producing_areas,
     users,
