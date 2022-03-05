@@ -226,7 +226,6 @@ pub async fn get_fields (db: web::Data<Pool>) -> Result<HttpResponse, Error> {
 }
 
 fn get_all_fields(pool: web::Data<Pool>) -> Result<Vec<JoinedFields>, diesel::result::Error> {
-    // use super::schema::single_malt_wisky_list;
     use super::schema::fields;
     let conn = pool.get().unwrap();
     let items = fields::table.inner_join(countries).inner_join(producing_areas).select((

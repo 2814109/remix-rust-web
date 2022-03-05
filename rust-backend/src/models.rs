@@ -98,5 +98,5 @@ pub struct JoinedSingleMaltWisky{
 pub struct JoinedFields{
     pub id: i32,
     pub country_name: String,
-    pub producting_area_name: String,
+    pub producing_area_name: String,
 }
