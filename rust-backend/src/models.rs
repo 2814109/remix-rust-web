@@ -88,7 +88,7 @@ pub struct NewSingleMaltWisky<'a> {
 pub struct JoinedSingleMaltWisky{
     pub id: i32,
     pub label: String,
-    pub conutry_name: String,
+    pub country_name: String,
     pub producing_area_name: String,
     pub status: String,
     pub price: i32

@@ -1,4 +1,4 @@
-use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,SingleMaltWisky, NewSingleMaltWisky, JoinedSingleMaltWisky};
+use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,SingleMaltWisky, NewSingleMaltWisky, JoinedSingleMaltWisky,Country};
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -158,16 +158,16 @@ fn get_all_existence_statuses(pool: web::Data<Pool>) -> Result<Vec<ExistenceStat
     Ok(items)
 }
 
-pub async fn get_producing_areas(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || get_all_producing_areas(db))
+pub async fn get_countries(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_countries(db))
         .await
-        .map(|user| HttpResponse::Ok().json(user))
+        .map(|country| HttpResponse::Ok().json(country))
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_producing_areas(pool: web::Data<Pool>) -> Result<Vec<ProducingArea>, diesel::result::Error> {
+fn get_all_countries(pool: web::Data<Pool>) -> Result<Vec<Country>, diesel::result::Error> {
     let conn = pool.get().unwrap();
-    let items = producing_areas.load::<ProducingArea>(&conn)?;
+    let items = countries.load::<Country>(&conn)?;
     Ok(items)
 }
 
