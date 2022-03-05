@@ -1,3 +1,14 @@
+# Break through
+
+## insert 時に get_result でエラーが出る
+
+https://github.com/diesel-rs/diesel/issues/2011
+構造体のカラム順序と schema のカラム順序を揃える必要がある
+
+### 起こりうるケース
+
+テーブル定義を変更した場合　（カラムの削除　 OR 追加）
+
 # migration
 
 ## diesel
