@@ -23,7 +23,7 @@ table! {
 table! {
     producing_areas (id) {
         id -> Int4,
-        name -> Text,
+        producing_area_name -> Text,
     }
 }
 

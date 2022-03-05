@@ -93,3 +93,10 @@ pub struct JoinedSingleMaltWisky{
     pub status: String,
     pub price: i32
 }
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct JoinedFields{
+    pub id: i32,
+    pub country_name: String,
+    pub producting_area_name: String,
+}

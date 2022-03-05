@@ -216,3 +216,21 @@ fn get_all_single_malt_wisky_list(pool: web::Data<Pool>) -> Result<Vec<JoinedSin
         single_malt_wisky_list::id, label, country_name, name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
     Ok(items)
 }
+
+pub async fn get_fields (db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+       Ok(web::block(move || get_all_fields(db))
+        .await
+        .map(|field| HttpResponse::Ok().json(field))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+
+}
+
+fn get_all_fields(pool: web::Data<Pool>) -> Result<Vec<JoinedSingleMaltWisky>, diesel::result::Error> {
+    use super::schema::single_malt_wisky_list;
+    use super::schema::fields;
+
+    let conn = pool.get().unwrap();
+    let items = single_malt_wisky_list::table.inner_join(fields::table.inner_join(countries).inner_join(producing_areas)).inner_join(existence_statuses).select((
+        single_malt_wisky_list::id, label, country_name, name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
+    Ok(items)
+}
