@@ -1,4 +1,4 @@
-use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,SingleMaltWisky, NewSingleMaltWisky, JoinedSingleMaltWisky,Country};
+use super::models::*;
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -213,7 +213,7 @@ fn get_all_single_malt_wisky_list(pool: web::Data<Pool>) -> Result<Vec<JoinedSin
 
     let conn = pool.get().unwrap();
     let items = single_malt_wisky_list::table.inner_join(fields::table.inner_join(countries).inner_join(producing_areas)).inner_join(existence_statuses).select((
-        single_malt_wisky_list::id, label, country_name, name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
+        single_malt_wisky_list::id, label, country_name, producing_area_name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
     Ok(items)
 }
 
@@ -225,12 +225,11 @@ pub async fn get_fields (db: web::Data<Pool>) -> Result<HttpResponse, Error> {
 
 }
 
-fn get_all_fields(pool: web::Data<Pool>) -> Result<Vec<JoinedSingleMaltWisky>, diesel::result::Error> {
-    use super::schema::single_malt_wisky_list;
+fn get_all_fields(pool: web::Data<Pool>) -> Result<Vec<JoinedFields>, diesel::result::Error> {
+    // use super::schema::single_malt_wisky_list;
     use super::schema::fields;
-
     let conn = pool.get().unwrap();
-    let items = single_malt_wisky_list::table.inner_join(fields::table.inner_join(countries).inner_join(producing_areas)).inner_join(existence_statuses).select((
-        single_malt_wisky_list::id, label, country_name, name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
+    let items = fields::table.inner_join(countries).inner_join(producing_areas).select((
+        fields::id, country_name, producing_area_name)).load::<JoinedFields>(&conn)?;
     Ok(items)
 }
