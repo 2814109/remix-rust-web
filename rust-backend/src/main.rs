@@ -35,9 +35,11 @@ async fn main() -> std::io::Result<()> {
             .route("/users/{id}", web::delete().to(handlers::delete_user))
             .route("/users", web::patch().to(handlers::update_user))
             .route("/existence_statuses",  web::get().to(handlers::get_existence_statuses))
-            .route("/producing_areas",  web::get().to(handlers::get_producing_areas))
-            .route("/liquor",  web::post().to(handlers::add_liquor))
-            .route("/liquors",  web::get().to(handlers::get_liquors))     
+            .route("/countries",  web::get().to(handlers::get_countries))
+            .route("/single_malt_wisky",  web::post().to(handlers::add_single_malt_wisky))
+            .route("/single_malt_wisky",  web::get().to(handlers::get_single_malt_wisky_list))   
+            .route("/fields",  web::get().to(handlers::get_fields))    
+ 
     })
     .bind("0.0.0.0:9000")?
     .run()

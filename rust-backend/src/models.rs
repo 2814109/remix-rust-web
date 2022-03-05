@@ -41,11 +41,24 @@ pub struct ProducingArea {
     pub name: String,
 }
 
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct Country {
+    pub id: i32,
+    pub country_name: String,
+}
 
 #[derive(Debug, Serialize, Deserialize, Queryable)]
-pub struct Liquor {
+pub struct Field {
     pub id: i32,
+    pub country_id: i32,
     pub producing_area_id: i32,
+
+}
+
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct SingleMaltWisky {
+    pub id: i32,
     pub age: i32,
     pub label: String,
     pub edition: String,
@@ -53,12 +66,13 @@ pub struct Liquor {
     pub price: i32,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
+    pub field_id: i32,
+
 }
 
 #[derive(Insertable, Debug)]
-#[table_name = "liquors"]
-pub struct NewLiquor<'a> {
-    pub producing_area_id: &'a i32,
+#[table_name = "single_malt_wisky_list"]
+pub struct NewSingleMaltWisky<'a> {
     pub age: &'a i32,
     pub label: &'a str,
     pub edition: &'a str,
@@ -66,4 +80,23 @@ pub struct NewLiquor<'a> {
     pub price: &'a i32,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
+    pub field_id: &'a i32,
+
+}
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct JoinedSingleMaltWisky{
+    pub id: i32,
+    pub label: String,
+    pub country_name: String,
+    pub producing_area_name: String,
+    pub status: String,
+    pub price: i32
+}
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct JoinedFields{
+    pub id: i32,
+    pub country_name: String,
+    pub producting_area_name: String,
 }

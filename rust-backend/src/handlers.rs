@@ -1,4 +1,4 @@
-use super::models::{NewUser, PatchUser, User,ExistenceStatus,ProducingArea,Liquor, NewLiquor};
+use super::models::*;
 use super::schema::users::dsl::*;
 use super::Pool;
 use crate::diesel::QueryDsl;
@@ -9,7 +9,8 @@ use serde::{Deserialize, Serialize};
 use std::vec::Vec;
 use super::schema::existence_statuses::dsl::*;
 use super::schema::producing_areas::dsl::*;
-use super::schema::liquors::dsl::*;
+use super::schema::countries::dsl::*;
+use super::schema::single_malt_wisky_list::dsl::*;
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -29,8 +30,8 @@ pub struct UpdateUser {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct InputLiquor {
-        producing_area_id: i32,
+pub struct InputSingleMaltWisky {
+        field_id: i32,
         age: i32,
         label: String,
         edition: String,
@@ -157,36 +158,35 @@ fn get_all_existence_statuses(pool: web::Data<Pool>) -> Result<Vec<ExistenceStat
     Ok(items)
 }
 
-pub async fn get_producing_areas(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || get_all_producing_areas(db))
+pub async fn get_countries(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_countries(db))
         .await
-        .map(|user| HttpResponse::Ok().json(user))
+        .map(|country| HttpResponse::Ok().json(country))
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_producing_areas(pool: web::Data<Pool>) -> Result<Vec<ProducingArea>, diesel::result::Error> {
+fn get_all_countries(pool: web::Data<Pool>) -> Result<Vec<Country>, diesel::result::Error> {
     let conn = pool.get().unwrap();
-    let items = producing_areas.load::<ProducingArea>(&conn)?;
+    let items = countries.load::<Country>(&conn)?;
     Ok(items)
 }
 
-pub async fn add_liquor(
+pub async fn add_single_malt_wisky(
     db: web::Data<Pool>,
-    item: web::Json<InputLiquor>,
+    item: web::Json<InputSingleMaltWisky>,
 ) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || add_single_liquor(db, item))
+    Ok(web::block(move || add_wisky(db, item))
         .await
-        .map(|liquor| HttpResponse::Created().json(liquor))
+        .map(|single_malt_wisky| HttpResponse::Created().json(single_malt_wisky))
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn add_single_liquor(
+fn add_wisky(
     db: web::Data<Pool>,
-    item: web::Json<InputLiquor>,
-) -> Result<Liquor, diesel::result::Error> {
+    item: web::Json<InputSingleMaltWisky>,
+) -> Result<SingleMaltWisky, diesel::result::Error> {
     let conn = db.get().unwrap();
-    let new_liquor = NewLiquor {
-        producing_area_id: &item.producing_area_id,
+    let new_single_molt_wisky = NewSingleMaltWisky {
         age: &item.age,
         label: &item.label,
         edition: &item.edition,
@@ -194,20 +194,42 @@ fn add_single_liquor(
         price: &item.price,
         created_at: chrono::Local::now().naive_local(),
         updated_at: chrono::Local::now().naive_local(),
+        field_id: &item.field_id,
     };
-    let res = insert_into(liquors).values(&new_liquor).get_result(&conn)?;
+    let res = insert_into(single_malt_wisky_list).values(&new_single_molt_wisky).get_result(&conn)?;
     Ok(res)
 }
 
-pub async fn get_liquors(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || get_all_liquors(db))
+pub async fn get_single_malt_wisky_list(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_single_malt_wisky_list(db))
         .await
-        .map(|liquor| HttpResponse::Ok().json(liquor))
+        .map(|single_malt_wisky| HttpResponse::Ok().json(single_malt_wisky))
         .map_err(|_| HttpResponse::InternalServerError())?)
 }
 
-fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<Liquor>, diesel::result::Error> {
+fn get_all_single_malt_wisky_list(pool: web::Data<Pool>) -> Result<Vec<JoinedSingleMaltWisky>, diesel::result::Error> {
+    use super::schema::single_malt_wisky_list;
+    use super::schema::fields;
+
     let conn = pool.get().unwrap();
-    let items = liquors.load::<Liquor>(&conn)?;
+    let items = single_malt_wisky_list::table.inner_join(fields::table.inner_join(countries).inner_join(producing_areas)).inner_join(existence_statuses).select((
+        single_malt_wisky_list::id, label, country_name, producing_area_name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
+    Ok(items)
+}
+
+pub async fn get_fields (db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+       Ok(web::block(move || get_all_fields(db))
+        .await
+        .map(|field| HttpResponse::Ok().json(field))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+
+}
+
+fn get_all_fields(pool: web::Data<Pool>) -> Result<Vec<JoinedFields>, diesel::result::Error> {
+    // use super::schema::single_malt_wisky_list;
+    use super::schema::fields;
+    let conn = pool.get().unwrap();
+    let items = fields::table.inner_join(countries).inner_join(producing_areas).select((
+        fields::id, country_name, producing_area_name)).load::<JoinedFields>(&conn)?;
     Ok(items)
 }
