@@ -13,17 +13,10 @@ table! {
 }
 
 table! {
-    fields (id) {
-        id -> Int4,
-        country_id -> Int4,
-        producing_area_id -> Int4,
-    }
-}
-
-table! {
     producing_areas (id) {
         id -> Int4,
         producing_area_name -> Text,
+        country_id -> Int4,
     }
 }
 
@@ -37,7 +30,7 @@ table! {
         price -> Int4,
         created_at -> Timestamp,
         updated_at -> Timestamp,
-        field_id -> Int4,
+        producing_area_id -> Int4,
     }
 }
 
@@ -51,15 +44,13 @@ table! {
     }
 }
 
-joinable!(fields -> countries (country_id));
-joinable!(fields -> producing_areas (producing_area_id));
+joinable!(producing_areas -> countries (country_id));
 joinable!(single_malt_wisky_list -> existence_statuses (existence_id));
-joinable!(single_malt_wisky_list -> fields (field_id));
+joinable!(single_malt_wisky_list -> producing_areas (producing_area_id));
 
 allow_tables_to_appear_in_same_query!(
     countries,
     existence_statuses,
-    fields,
     producing_areas,
     single_malt_wisky_list,
     users,
