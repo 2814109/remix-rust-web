@@ -24,12 +24,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 const ScholeIndex: VFC = () => {
   return (
-    <div>
-      <div className="base">
-        <Sidebar />
-        <div className="base-contents">
-          <Outlet />
-        </div>
+    <div className="base">
+      <Sidebar />
+      <div className="base-contents">
+        <Outlet />
       </div>
     </div>
   );

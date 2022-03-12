@@ -1,6 +1,6 @@
 .base {
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .base-contents {
@@ -9,8 +9,7 @@
 }
 
 .logout-wrap {
-  position: absolute;
-  bottom: 50px;
+  margin-top: 48px;
 }
 .logout {
   width: 100%;

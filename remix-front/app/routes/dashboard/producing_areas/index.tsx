@@ -10,7 +10,6 @@ export const loader: LoaderFunction = async () => {
 };
 const Index: FC = () => {
   const producing_areas: ProducingArea[] = useLoaderData();
-  console.log("#");
   return (
     <div className="centering">
       <table>
