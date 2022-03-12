@@ -3,14 +3,14 @@ import { LoaderFunction } from "@remix-run/server-runtime";
 import { useLoaderData } from "remix";
 import { getFetcher } from "~/libs/api/base";
 import { Country } from "~/models/Country";
-import { Field } from "~/models/Field";
+import { ProducingArea } from "~/models/ProducingArea";
 export const loader: LoaderFunction = async () => {
-  const fields: Field[] = await getFetcher("fields");
-  return fields;
+  const producing_areas: ProducingArea[] = await getFetcher("producing_areas");
+  return producing_areas;
 };
 const Index: FC = () => {
-  const fields: Field[] = useLoaderData();
-  console.log(fields);
+  const producing_areas: ProducingArea[] = useLoaderData();
+  console.log("#");
   return (
     <div className="centering">
       <table>
@@ -22,12 +22,12 @@ const Index: FC = () => {
           </tr>
         </thead>
         <tbody>
-          {fields.map((field) => {
+          {producing_areas.map((producing_area) => {
             return (
-              <tr key={field.id}>
-                <td>{field.id}</td>
-                <td>{field.country_name}</td>
-                <td>{field.producing_area_name}</td>
+              <tr key={producing_area.id}>
+                <td>{producing_area.id}</td>
+                <td>{producing_area.country_name}</td>
+                <td>{producing_area.producing_area_name}</td>
               </tr>
             );
           })}

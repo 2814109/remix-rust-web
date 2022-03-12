@@ -1,4 +1,5 @@
 export type ProducingArea = {
   id: number;
-  name: string;
+  country_name: string;
+  producing_area_name: string;
 };

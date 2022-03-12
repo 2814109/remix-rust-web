@@ -13,7 +13,7 @@ table! {
 }
 
 table! {
-    liquor_categories (id) {
+    liquor_types (id) {
         id -> Int4,
         liquor_categories_name -> Text,
     }
@@ -27,7 +27,8 @@ table! {
         price -> Int4,
         created_at -> Timestamp,
         updated_at -> Timestamp,
-        liquor_categories_id -> Int4,
+        liquor_category_id -> Int4,
+        country_id -> Int4,
     }
 }
 
@@ -63,18 +64,37 @@ table! {
     }
 }
 
+table! {
+    wisky_categories (id) {
+        id -> Int4,
+        liquor_id -> Text,
+        wisky_type_id -> Int4,
+    }
+}
+
+table! {
+    wisky_types (id) {
+        id -> Int4,
+        type_name -> Text,
+    }
+}
+
+joinable!(liquors -> countries (country_id));
 joinable!(liquors -> existence_statuses (existence_id));
-joinable!(liquors -> liquor_categories (liquor_categories_id));
+joinable!(liquors -> liquor_types (liquor_category_id));
 joinable!(producing_areas -> countries (country_id));
 joinable!(single_malt_wisky_list -> existence_statuses (existence_id));
 joinable!(single_malt_wisky_list -> producing_areas (producing_area_id));
+joinable!(wisky_categories -> wisky_types (wisky_type_id));
 
 allow_tables_to_appear_in_same_query!(
     countries,
     existence_statuses,
-    liquor_categories,
+    liquor_types,
     liquors,
     producing_areas,
     single_malt_wisky_list,
     users,
+    wisky_categories,
+    wisky_types,
 );
