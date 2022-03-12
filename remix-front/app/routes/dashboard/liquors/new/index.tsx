@@ -10,7 +10,6 @@ import { LoaderFunction } from "remix";
 import { useLoaderData } from "remix";
 import { getFetcher } from "~/libs/api/base";
 import { ExistenceStatus } from "~/models/ExistenceStatus";
-// import { ProducingArea } from "~/models/ProducingArea";
 import SelectItem from "~/components/form/SelectItem";
 import { Country } from "~/models/Country";
 

@@ -15,7 +15,7 @@ table! {
 table! {
     liquor_types (id) {
         id -> Int4,
-        liquor_categories_name -> Text,
+        liquor_type_name -> Text,
     }
 }
 
@@ -75,7 +75,7 @@ table! {
 table! {
     wisky_types (id) {
         id -> Int4,
-        type_name -> Text,
+        wisky_type_name -> Text,
     }
 }
 
