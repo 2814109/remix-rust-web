@@ -35,7 +35,7 @@ pub struct ExistenceStatus {
     pub status: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Queryable)]
+#[derive(Debug, Serialize, Deserialize, Queryable, Identifiable)]
 pub struct ProducingArea {
     pub id: i32,
     pub name: String,
@@ -80,7 +80,7 @@ pub struct NewSingleMaltWisky<'a> {
     pub price: &'a i32,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
-    pub field_id: &'a i32,
+    pub producing_area_id: &'a i32,
 
 }
 
@@ -95,7 +95,7 @@ pub struct JoinedSingleMaltWisky{
 }
 
 #[derive(Debug, Serialize, Deserialize, Queryable)]
-pub struct JoinedFields{
+pub struct JoinedProducingArea{
     pub id: i32,
     pub country_name: String,
     pub producing_area_name: String,

@@ -38,7 +38,7 @@ async fn main() -> std::io::Result<()> {
             .route("/countries",  web::get().to(handlers::get_countries))
             .route("/single_malt_wisky",  web::post().to(handlers::add_single_malt_wisky))
             .route("/single_malt_wisky",  web::get().to(handlers::get_single_malt_wisky_list))   
-            .route("/fields",  web::get().to(handlers::get_fields))    
+            .route("/producing_areas",  web::get().to(handlers::get_producing_areas))    
  
     })
     .bind("0.0.0.0:9000")?

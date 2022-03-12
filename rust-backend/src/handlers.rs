@@ -31,7 +31,7 @@ pub struct UpdateUser {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputSingleMaltWisky {
-        field_id: i32,
+        producing_area_id: i32,
         age: i32,
         label: String,
         edition: String,
@@ -194,7 +194,7 @@ fn add_wisky(
         price: &item.price,
         created_at: chrono::Local::now().naive_local(),
         updated_at: chrono::Local::now().naive_local(),
-        field_id: &item.field_id,
+        producing_area_id: &item.producing_area_id,
     };
     let res = insert_into(single_malt_wisky_list).values(&new_single_molt_wisky).get_result(&conn)?;
     Ok(res)
@@ -209,26 +209,30 @@ pub async fn get_single_malt_wisky_list(db: web::Data<Pool>) -> Result<HttpRespo
 
 fn get_all_single_malt_wisky_list(pool: web::Data<Pool>) -> Result<Vec<JoinedSingleMaltWisky>, diesel::result::Error> {
     use super::schema::single_malt_wisky_list;
-    use super::schema::fields;
+    use super::schema::producing_areas;
 
     let conn = pool.get().unwrap();
-    let items = single_malt_wisky_list::table.inner_join(fields::table.inner_join(countries).inner_join(producing_areas)).inner_join(existence_statuses).select((
+    //let items = single_malt_wisky_list::table.inner_join(fields::table.inner_join(countries).inner_join(producing_areas)).inner_join(existence_statuses).select((
+    let items = single_malt_wisky_list::table.inner_join(producing_areas::table.inner_join(countries)).inner_join(existence_statuses).select((
+
         single_malt_wisky_list::id, label, country_name, producing_area_name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
     Ok(items)
 }
 
-pub async fn get_fields (db: web::Data<Pool>) -> Result<HttpResponse, Error> {
-       Ok(web::block(move || get_all_fields(db))
+pub async fn get_producing_areas (db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    
+       Ok(web::block(move || get_all_producing_areas(db))
         .await
-        .map(|field| HttpResponse::Ok().json(field))
+        .map(|producing_area| HttpResponse::Ok().json(producing_area))
         .map_err(|_| HttpResponse::InternalServerError())?)
 
 }
 
-fn get_all_fields(pool: web::Data<Pool>) -> Result<Vec<JoinedFields>, diesel::result::Error> {
-    use super::schema::fields;
+fn get_all_producing_areas(pool: web::Data<Pool>) -> Result<Vec<JoinedProducingArea>, diesel::result::Error> {
+    use super::schema::producing_areas;
+
     let conn = pool.get().unwrap();
-    let items = fields::table.inner_join(countries).inner_join(producing_areas).select((
-        fields::id, country_name, producing_area_name)).load::<JoinedFields>(&conn)?;
+    let items = producing_areas.inner_join(countries).select((
+    producing_areas::id, country_name, producing_area_name)).load::<JoinedProducingArea>(&conn)?;
     Ok(items)
 }

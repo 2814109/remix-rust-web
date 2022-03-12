@@ -27,6 +27,7 @@ table! {
         price -> Int4,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        liquor_categories_id -> Int4,
     }
 }
 
@@ -63,6 +64,7 @@ table! {
 }
 
 joinable!(liquors -> existence_statuses (existence_id));
+joinable!(liquors -> liquor_categories (liquor_categories_id));
 joinable!(producing_areas -> countries (country_id));
 joinable!(single_malt_wisky_list -> existence_statuses (existence_id));
 joinable!(single_malt_wisky_list -> producing_areas (producing_area_id));
