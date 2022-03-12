@@ -10,23 +10,31 @@ import { LoaderFunction } from "remix";
 import { useLoaderData } from "remix";
 import { getFetcher } from "~/libs/api/base";
 import { ExistenceStatus } from "~/models/ExistenceStatus";
+import { LiquorType } from "~/models/LiquorType";
 import SelectItem from "~/components/form/SelectItem";
 import { Country } from "~/models/Country";
 
 export const loader: LoaderFunction = async () => {
   const existence_statuses = await getFetcher("existence_statuses");
   const countries = await getFetcher("countries");
-  return { existence_statuses, countries };
+  const liquor_types = await getFetcher("liquor_types");
+
+  return { existence_statuses, countries, liquor_types };
 };
 
 const New: FC = () => {
-  const { existence_statuses, countries }: { existence_statuses: ExistenceStatus[]; countries: Country[] } = useLoaderData();
+  const { existence_statuses, countries, liquor_types }: { existence_statuses: ExistenceStatus[]; countries: Country[]; liquor_types: LiquorType[] } =
+    useLoaderData();
   const option_status_of_existence = existence_statuses.map(({ id, status }) => {
     return { value: String(id), label: status };
   });
 
   const option_countries = countries.map(({ id, country_name }) => {
     return { value: String(id), label: country_name };
+  });
+
+  const option_liquor_types = liquor_types.map(({ id, liquor_type_name }) => {
+    return { value: String(id), label: liquor_type_name };
   });
 
   const [formData, setFormData] = useState<FormSingleMaltWisky>(SingleMaltWiskyFormTemplate);
@@ -55,7 +63,7 @@ const New: FC = () => {
 
         <VerticalPadding>
           <LabelItem text="Liquor Type" required={true} />
-          <SelectItem options={option_countries} onChange={onChange} name="country_id" value={String(formData.country_id)} />
+          <SelectItem options={option_liquor_types} onChange={onChange} name="liquor_type_id" value={String(formData.country_id)} />
         </VerticalPadding>
 
         <VerticalPadding>

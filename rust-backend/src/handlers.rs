@@ -11,6 +11,7 @@ use super::schema::existence_statuses::dsl::*;
 use super::schema::producing_areas::dsl::*;
 use super::schema::countries::dsl::*;
 use super::schema::single_malt_wisky_list::dsl::*;
+use super::schema::liquor_types::dsl::*;
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -234,5 +235,18 @@ fn get_all_producing_areas(pool: web::Data<Pool>) -> Result<Vec<JoinedProducingA
     let conn = pool.get().unwrap();
     let items = producing_areas.inner_join(countries).select((
     producing_areas::id, country_name, producing_area_name)).load::<JoinedProducingArea>(&conn)?;
+    Ok(items)
+}
+
+pub async fn get_liquor_types(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_liquor_types(db))
+        .await
+        .map(|liquor_type| HttpResponse::Ok().json(liquor_type))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+fn get_all_liquor_types(pool: web::Data<Pool>) -> Result<Vec<LiquorType>, diesel::result::Error> {
+    let conn = pool.get().unwrap();
+    let items = liquor_types.load::<LiquorType>(&conn)?;
     Ok(items)
 }

@@ -47,6 +47,14 @@ pub struct Country {
     pub country_name: String,
 }
 
+
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct LiquorType {
+    pub id: i32,
+    pub liquor_type_name: String,
+}
+
 #[derive(Debug, Serialize, Deserialize, Queryable)]
 pub struct Field {
     pub id: i32,
