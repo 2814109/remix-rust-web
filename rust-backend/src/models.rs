@@ -89,7 +89,6 @@ pub struct NewSingleMaltWisky<'a> {
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
     pub producing_area_id: &'a i32,
-
 }
 
 #[derive(Debug, Serialize, Deserialize, Queryable)]
@@ -107,4 +106,28 @@ pub struct JoinedProducingArea{
     pub id: i32,
     pub country_name: String,
     pub producing_area_name: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct Liquor {
+    pub id: i32,
+    pub existence_id: i32,
+    pub label: String,
+    pub price: i32,
+    pub created_at: chrono::NaiveDateTime,
+    pub updated_at: chrono::NaiveDateTime,
+    pub country_id: i32,
+    pub liquor_type_id: i32,
+}
+
+#[derive(Insertable, Debug)]
+#[table_name = "liquors"]
+pub struct NewLiquor<'a> {
+    pub existence_id: &'a i32,
+    pub label: &'a str,
+    pub price: &'a i32,
+    pub created_at: chrono::NaiveDateTime,
+    pub updated_at: chrono::NaiveDateTime,
+    pub country_id: &'a i32,
+    pub liquor_type_id: &'a i32,
 }

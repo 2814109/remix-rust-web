@@ -11,6 +11,7 @@ import { useLoaderData } from "remix";
 import { getFetcher } from "~/libs/api/base";
 import { ExistenceStatus } from "~/models/ExistenceStatus";
 import { LiquorType } from "~/models/LiquorType";
+import { FormLiquorType, FormLiquorTypeTemplate } from "~/models/Liquor";
 import SelectItem from "~/components/form/SelectItem";
 import { Country } from "~/models/Country";
 
@@ -37,15 +38,15 @@ const New: FC = () => {
     return { value: String(id), label: liquor_type_name };
   });
 
-  const [formData, setFormData] = useState<FormSingleMaltWisky>(SingleMaltWiskyFormTemplate);
+  const [formData, setFormData] = useState<FormLiquorType>(FormLiquorTypeTemplate);
   const onChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
-
+  console.log(formData);
   return (
     <MainFrame>
       <FormTitile text={"Liquors"} />
-      <form className="form-width" method="post" action="/dashboard/SingleMaltScotch/post">
+      <form className="form-width" method="post" action="/dashboard/liquors/post">
         <VerticalPadding>
           <LabelItem text="Label" required={true} />
           <InputItem name="label" onChange={onChange} type="text" value={formData.label} />
@@ -63,12 +64,12 @@ const New: FC = () => {
 
         <VerticalPadding>
           <LabelItem text="Liquor Type" required={true} />
-          <SelectItem options={option_liquor_types} onChange={onChange} name="liquor_type_id" value={String(formData.country_id)} />
+          <SelectItem options={option_liquor_types} onChange={onChange} name="liquor_type_id" value={String(formData.liquor_type_id)} />
         </VerticalPadding>
 
         <VerticalPadding>
           <LabelItem text="Status" required={true} />
-          <SelectItem options={option_status_of_existence} onChange={onChange} name="status" value={String(formData.status)} />
+          <SelectItem options={option_status_of_existence} onChange={onChange} name="existence_id" value={String(formData.existence_id)} />
         </VerticalPadding>
         <CenterWrap>
           <input className="form-button" type="submit" />
