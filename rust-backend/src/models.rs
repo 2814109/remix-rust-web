@@ -142,13 +142,14 @@ pub struct ReadLiquors{
     pub liquor_type_name: String,
     pub status: String,
 }
-// #[derive(Debug, Serialize, Deserialize, Queryable)]
-// pub struct ShowLiquor {
-//     pub id: i32,
-//     pub label: String,
-//     pub price: i32,
-//     pub country_id: i32,
-//     pub liquor_type_id: i32,
-//     pub existence_id: i32,
 
-// }
+#[derive(AsChangeset)]
+#[table_name = "liquors"]
+pub struct PatchLiquor<'a> {
+    pub existence_id: &'a i32,
+    pub label: &'a str,
+    pub price: &'a i32,
+    pub updated_at: chrono::NaiveDateTime,
+    pub country_id: &'a i32,
+    pub liquor_type_id: &'a i32,
+}

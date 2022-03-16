@@ -49,7 +49,8 @@ const Edit: FC = () => {
   return (
     <MainFrame>
       <FormTitile text={"Liquors"} />
-      <form className="form-width" method="post" action="/dashboard/liquors/post">
+      <form className="form-width" method="post" action="/dashboard/liquors/patch">
+        <input type="hidden" name="liquor_id" value={liquor.id} />
         <VerticalPadding>
           <LabelItem text="Label" required={true} />
           <InputItem name="label" onChange={onChange} type="text" value={formData.label} />

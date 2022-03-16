@@ -36,10 +36,11 @@ async fn main() -> std::io::Result<()> {
             .route("/users", web::patch().to(handlers::update_user))
             .route("/existence_statuses",  web::get().to(handlers::get_existence_statuses))
             .route("/countries",  web::get().to(handlers::get_countries))
-            .route("/single_malt_wisky",  web::post().to(handlers::add_single_malt_wisky))            .route("/single_malt_wisky",  web::post().to(handlers::add_single_malt_wisky))
+            .route("/single_malt_wisky",  web::post().to(handlers::add_single_malt_wisky))            
             .route("/liquors", web::get().to(handlers::get_liquors))
             .route("/liquors",  web::post().to(handlers::add_liquor))
             .route("/liquors/{liquor_id}", web::get().to(handlers::get_liquor_by_id))
+            .route("/liquors", web::patch().to(handlers::update_liquor))
             .route("/producing_areas",  web::get().to(handlers::get_producing_areas))    
             .route("/liquor_types",  web::get().to(handlers::get_liquor_types))    
 

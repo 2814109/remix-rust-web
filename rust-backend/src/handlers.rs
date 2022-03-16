@@ -42,13 +42,23 @@ pub struct InputSingleMaltWisky {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputLiquor {  
-    existence_id: i32,
     label: String,
     price: i32,
     country_id: i32,
     liquor_type_id: i32,
+    existence_id: i32,
+
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateLiquor{
+    id: i32,
+    label: String,
+    price: i32,
+    country_id: i32,
+    liquor_type_id: i32,
+    existence_id: i32,
+}
 // Handler for GET /users
 pub async fn get_users(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
     Ok(web::block(move || get_all_users(db))
@@ -304,4 +314,33 @@ pub async fn get_liquor_by_id(
 fn db_get_liquor_by_id(pool: web::Data<Pool>, liquor_id: i32) -> Result<Liquor, diesel::result::Error> {
     let conn = pool.get().unwrap();
     liquors.find(liquor_id).get_result::<Liquor>(&conn)
+}
+
+pub async fn update_liquor(
+    db: web::Data<Pool>,
+    item: web::Json<UpdateLiquor>,
+) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || update_single_liquor(db, item))
+        .await
+        .map(|liquor| HttpResponse::Created().json(liquor))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+fn update_single_liquor(
+    db: web::Data<Pool>,
+    item: web::Json<UpdateLiquor>,
+) -> Result<Liquor, diesel::result::Error> {
+    let conn = db.get().unwrap();
+    let update_liquor = PatchLiquor {
+        existence_id: &item.existence_id,
+        label: &item.label,
+        price: &item.price,
+        updated_at: chrono::Local::now().naive_local(),
+        country_id: &item.country_id,
+        liquor_type_id: &item.liquor_type_id,
+    };
+    let updated_row = update(liquors.find(&item.id))
+        .set(&update_liquor)
+        .get_result(&conn)?;
+    Ok(updated_row)
 }

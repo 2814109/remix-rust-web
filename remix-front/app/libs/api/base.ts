@@ -18,3 +18,12 @@ export const postFetcher = async (url: string, request_body: {}) => {
   });
   return response.json();
 };
+
+export const patchFetcher = async (url: string, request_body: {}) => {
+  const response = await fetch(`${DOMAIN}/${url}`, {
+    method: "patch",
+    headers,
+    body: JSON.stringify(request_body),
+  });
+  return response.json();
+};
