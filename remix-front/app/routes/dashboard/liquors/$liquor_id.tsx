@@ -4,27 +4,31 @@ import InputItem from "~/components/form/InputItem";
 import LabelItem from "~/components/form/LabelItem";
 import MainFrame from "~/components/layout/MainFrame";
 import CenterWrap from "~/components/layout/CenterWrap";
+import SelectItem from "~/components/form/SelectItem";
 import VerticalPadding from "~/components/layout/VerticalPadding";
 import { LoaderFunction } from "remix";
 import { useLoaderData } from "remix";
 import { getFetcher } from "~/libs/api/base";
+import { FormLiquorType } from "~/models/Liquor";
 import { ExistenceStatus } from "~/models/ExistenceStatus";
-import { LiquorType } from "~/models/LiquorType";
-import { FormLiquorType, FormLiquorTypeTemplate } from "~/models/Liquor";
-import SelectItem from "~/components/form/SelectItem";
 import { Country } from "~/models/Country";
+import { LiquorType } from "~/models/LiquorType";
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ params }) => {
+  const liquor = await getFetcher(`liquors/${params.liquor_id}`);
   const existence_statuses = await getFetcher("existence_statuses");
   const countries = await getFetcher("countries");
   const liquor_types = await getFetcher("liquor_types");
-
-  return { existence_statuses, countries, liquor_types };
+  return { liquor, existence_statuses, countries, liquor_types };
 };
+const Edit: FC = () => {
+  const {
+    liquor,
+    existence_statuses,
+    countries,
+    liquor_types,
+  }: { liquor: FormLiquorType; existence_statuses: ExistenceStatus[]; countries: Country[]; liquor_types: LiquorType[] } = useLoaderData();
 
-const New: FC = () => {
-  const { existence_statuses, countries, liquor_types }: { existence_statuses: ExistenceStatus[]; countries: Country[]; liquor_types: LiquorType[] } =
-    useLoaderData();
   const option_status_of_existence = existence_statuses.map(({ id, status }) => {
     return { value: String(id), label: status };
   });
@@ -37,10 +41,11 @@ const New: FC = () => {
     return { value: String(id), label: liquor_type_name };
   });
 
-  const [formData, setFormData] = useState<FormLiquorType>(FormLiquorTypeTemplate);
+  const [formData, setFormData] = useState<FormLiquorType>(liquor);
   const onChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
+
   return (
     <MainFrame>
       <FormTitile text={"Liquors"} />
@@ -77,4 +82,4 @@ const New: FC = () => {
   );
 };
 
-export default New;
+export default Edit;

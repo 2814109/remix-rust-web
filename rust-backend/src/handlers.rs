@@ -210,25 +210,6 @@ fn add_wisky(
     Ok(res)
 }
 
-// pub async fn get_single_malt_wisky_list(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
-//     Ok(web::block(move || get_all_single_malt_wisky_list(db))
-//         .await
-//         .map(|single_malt_wisky| HttpResponse::Ok().json(single_malt_wisky))
-//         .map_err(|_| HttpResponse::InternalServerError())?)
-// }
-
-// fn get_all_single_malt_wisky_list(pool: web::Data<Pool>) -> Result<Vec<JoinedSingleMaltWisky>, diesel::result::Error> {
-//     use super::schema::single_malt_wisky_list;
-//     use super::schema::producing_areas;
-
-//     let conn = pool.get().unwrap();
-//     //let items = single_malt_wisky_list::table.inner_join(fields::table.inner_join(countries).inner_join(producing_areas)).inner_join(existence_statuses).select((
-//     let items = single_malt_wisky_list::table.inner_join(producing_areas::table.inner_join(countries)).inner_join(existence_statuses).select((
-
-//         single_malt_wisky_list::id, label, country_name, producing_area_name, status, price)).load::<JoinedSingleMaltWisky>(&conn)?;
-//     Ok(items)
-// }
-
 pub async fn get_producing_areas (db: web::Data<Pool>) -> Result<HttpResponse, Error> {
     
        Ok(web::block(move || get_all_producing_areas(db))
@@ -305,4 +286,22 @@ fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<ReadLiquors>, diesel::re
     let items = liquors::table.inner_join(countries).inner_join(existence_statuses).inner_join(liquor_types).select((
         liquors::id, liquors::label, liquors::price, country_name, liquor_type_name, status)).load::<ReadLiquors>(&conn)?;
     Ok(items)
+}
+
+
+pub async fn get_liquor_by_id(
+    db: web::Data<Pool>,
+    liquor_id: web::Path<i32>,
+) -> Result<HttpResponse, Error> {
+    Ok(
+        web::block(move || db_get_liquor_by_id(db, liquor_id.into_inner()))
+            .await
+            .map(|liquor| HttpResponse::Ok().json(liquor))
+            .map_err(|_| HttpResponse::InternalServerError())?,
+    )
+}
+
+fn db_get_liquor_by_id(pool: web::Data<Pool>, liquor_id: i32) -> Result<Liquor, diesel::result::Error> {
+    let conn = pool.get().unwrap();
+    liquors.find(liquor_id).get_result::<Liquor>(&conn)
 }

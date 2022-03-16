@@ -142,3 +142,13 @@ pub struct ReadLiquors{
     pub liquor_type_name: String,
     pub status: String,
 }
+// #[derive(Debug, Serialize, Deserialize, Queryable)]
+// pub struct ShowLiquor {
+//     pub id: i32,
+//     pub label: String,
+//     pub price: i32,
+//     pub country_id: i32,
+//     pub liquor_type_id: i32,
+//     pub existence_id: i32,
+
+// }

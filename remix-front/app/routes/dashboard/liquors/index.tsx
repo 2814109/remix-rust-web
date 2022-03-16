@@ -4,6 +4,7 @@ import { getFetcher } from "~/libs/api/base";
 import { useLoaderData } from "remix";
 import { ReadLiquor } from "~/models/Liquor";
 import { Link } from "remix";
+import { useNavigate } from "react-router-dom";
 
 export const loader: LoaderFunction = async () => {
   const liquors = await getFetcher("liquors");
@@ -12,7 +13,10 @@ export const loader: LoaderFunction = async () => {
 
 const Index: FC = () => {
   const liquors: ReadLiquor[] = useLoaderData();
-
+  const navigate = useNavigate();
+  const handleClickRouting = (id: number) => {
+    navigate(`/dashboard/liquors/${id}`);
+  };
   return (
     <>
       <Link to="/dashboard/liquors/new">Create Liquor</Link>
@@ -30,7 +34,7 @@ const Index: FC = () => {
           <tbody>
             {liquors.map((liquor) => {
               return (
-                <tr key={liquor.id}>
+                <tr key={liquor.id} onClick={() => handleClickRouting(liquor.id)}>
                   <td>{liquor.label}</td>
                   <td>{liquor.price}</td>
                   <td>{liquor.country_name}</td>
