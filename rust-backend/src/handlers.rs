@@ -14,8 +14,6 @@ use super::schema::single_malt_wisky_list::dsl::*;
 use super::schema::liquor_types::dsl::*;
 use super::schema::liquors::dsl::*;
 
-
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputUser {
     first_name: String,
@@ -267,7 +265,6 @@ pub async fn add_liquor(
     db: web::Data<Pool>,
     item: web::Json<InputLiquor>,
 ) -> Result<HttpResponse, Error> {
-    println!("{} days", 31);
     Ok(web::block(move || add_single_liquor(db, item))
         .await
         .map(|liquor| HttpResponse::Created().json(liquor))
@@ -278,7 +275,6 @@ fn add_single_liquor(
     db: web::Data<Pool>,
     item: web::Json<InputLiquor>,
 ) -> Result<Liquor, diesel::result::Error> {
-    println!("{} days", 31);
     let conn = db.get().unwrap();
     let new_liquor = NewLiquor {
         existence_id: &item.existence_id,
@@ -292,4 +288,21 @@ fn add_single_liquor(
     };
     let res = insert_into(liquors).values(&new_liquor).get_result(&conn)?;
     Ok(res)
+}
+
+
+pub async fn get_liquors(db: web::Data<Pool>) -> Result<HttpResponse, Error> {
+    Ok(web::block(move || get_all_liquors(db))
+        .await
+        .map(|liquor| HttpResponse::Ok().json(liquor))
+        .map_err(|_| HttpResponse::InternalServerError())?)
+}
+
+fn get_all_liquors(pool: web::Data<Pool>) -> Result<Vec<ReadLiquors>, diesel::result::Error> {
+    use super::schema::liquors;
+
+    let conn = pool.get().unwrap();
+    let items = liquors::table.inner_join(countries).inner_join(existence_statuses).inner_join(liquor_types).select((
+        liquors::id, liquors::label, liquors::price, country_name, liquor_type_name, status)).load::<ReadLiquors>(&conn)?;
+    Ok(items)
 }

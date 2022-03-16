@@ -24,3 +24,12 @@ export const FormLiquorTypeTemplate: FormLiquorType = {
   country_id: 0,
   liquor_type_id: 0,
 };
+
+export type ReadLiquor = {
+  id: number;
+  label: string;
+  price: number;
+  country_name: string;
+  status: string;
+  liquor_type_name: string;
+};

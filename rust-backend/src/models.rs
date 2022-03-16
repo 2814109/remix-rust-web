@@ -131,3 +131,14 @@ pub struct NewLiquor<'a> {
     pub country_id: &'a i32,
     pub liquor_type_id: &'a i32,
 }
+
+
+#[derive(Debug, Serialize, Deserialize, Queryable)]
+pub struct ReadLiquors{
+    pub id: i32,
+    pub label: String,
+    pub price: i32,
+    pub country_name: String,
+    pub liquor_type_name: String,
+    pub status: String,
+}
