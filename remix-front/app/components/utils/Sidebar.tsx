@@ -14,7 +14,7 @@ const Sidebar: FC = () => {
       <SidebarItem link={"countries/"} label={"Country"} />
       <SidebarItem link={"producing_areas/"} label={"Producing Area"} />
       <SidebarItem link={"liquors/"} label={"liquors"} />
-      <SidebarItem link={"single_malt_wisky/"} label={"Wisky"} />
+      {/* <SidebarItem link={"single_malt_wisky/"} label={"Wisky"} /> */}
       <div className="logout-wrap">
         <form action="logout" method="post">
           <button className="logout">Logout</button>
